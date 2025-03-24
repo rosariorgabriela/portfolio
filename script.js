@@ -1,24 +1,25 @@
-function setActiveLink() {
-    const scrollPosition = window.scrollY;
-    const links = document.querySelectorAll('.navbar a');
+document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll(".nav-link");
+    const sections = document.querySelectorAll("main section"); // Get all sections inside <main>
 
-    links.forEach(link => {
-        const sectionId = link.getAttribute('href').split("#")[1]; 
-        const section = document.getElementById(sectionId);
-        
-        if (section) {
-            const sectionTop = section.offsetTop - window.innerHeight * 0.3; 
-            const sectionBottom = sectionTop + section.offsetHeight;
+    function updateActiveNav() {
+        let scrollPosition = window.scrollY + 200; // Offset to detect section in view
 
-            // Remove active class from all links
-            links.forEach(link => link.classList.remove('active'));
+        sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute("id");
+            const correspondingNavLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
 
-            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                link.classList.add('active');
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                // Remove active class from all links
+                navLinks.forEach((link) => link.classList.remove("active"));
+                
+                // Add active class to the current section's nav link
+                correspondingNavLink.classList.add("active");
             }
-        }
-    });
-}
+        });
+    }
 
-window.addEventListener('scroll', setActiveLink);
-window.addEventListener('load', setActiveLink);
+    window.addEventListener("scroll", updateActiveNav);
+});
